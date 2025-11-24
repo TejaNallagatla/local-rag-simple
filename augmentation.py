@@ -38,7 +38,7 @@ class Augmentation:
             context_parts.append(
                 f"[Page {doc['page']}]\n"
                 f"Relevance: {result['similarity']:.2%}\n"
-                f"{doc['content']}\n"
+                f"{doc.get('chunk', '')}\n"
             )
         
         # Combine everything

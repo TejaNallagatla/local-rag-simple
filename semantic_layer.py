@@ -14,7 +14,7 @@ class SemanticLayer:
     """
     
     def __init__(self, model_name='all-MiniLM-L6-v2'):
-        print("🧠 COMPONENT 2: Semantic Layer initializing...")
+        print("COMPONENT 2: Semantic Layer initializing...")
         print(f"   Loading model: {model_name}")
         print("   (First run downloads 22MB - takes 30 seconds)")
         

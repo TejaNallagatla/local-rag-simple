@@ -9,9 +9,9 @@ This project implements a **minimal Retrieval-Augmented Generation (RAG) pipelin
 | PDF Parsing    | PyPDF2                                     | Extract text from PDF pages             |
 | Text Chunking  | Regex-based sentence tokenizer             | Avoids NLTK issues on macOS/Python 3.12 |
 | Semantic Layer | sentence-transformers (`all-MiniLM-L6-v2`) | CPU-efficient embedding model           |
-| Retrieval      | Custom cosine similarity                   | Lightweight and easy to debug           |
+| Retrieval      | FAISS IndexFlatL2 similarity               | Lightweight and easy to debug           |
 | Augmentation   | Python string formatting                   | Flexible, no extra dependencies         |
-| Generation     | Template-based synthesis                   | Lightweight, LLM optional               |
+| Generation     | LLM: Ollama(`Llama 3.2 (3B parameters)`)   | Generates grounded answers              |
 
 
 ## Project Components
@@ -59,7 +59,7 @@ query_embedding = semantic.encode_query("What are pcai core tools?")
 
 **Goal:** Find the most relevant chunks based on semantic similarity.
 
-**Tool:** Custom Python search with cosine similarity (or FAISS for larger datasets)
+**Tool:** Custom Python search with FAISS IndexFlatL2 (normalized)
 
 **Method:**
 - Compute similarity between query embedding and each document embedding.
@@ -102,21 +102,22 @@ enriched = augmentor.create_context("What are pcai core tools?", results)
 Produce a final answer using the enriched context.
 
 ### Tool
-Template-based generation (can be replaced with LLM)
+LLM based generation - via Ollama running a model like Llama 3.2:3b locally
 
 ### Method
-Format retrieved chunks into a readable answer.
+Combine query + retrieved context into structured prompt
 
-Include a snippet of each relevant chunk for clarity.
+Generate natural language answer using Ollama LLM
 
 ### Why
-For demo purposes, avoids requiring a large LLM.
+Context-grounded: LLM generates answers based solely on retrieved documents, reducing hallucination
 
-Template ensures answer is readable and informative.
+Source attribution: Users can verify information against original documents
+
 
 Example:
 ```
-generator = Generation()
+generator = Generation(model_name='llama3.2:3b', use_llm=True)
 answer = generator.generate(enriched, results)
 ```
 ### 6️⃣ Testing & Validation
@@ -137,14 +138,41 @@ ask_question("What are pcai core tools?")
 
 
 ## Quick Start
-```bash
 
-python -m venv rag-venv
+### Prerequisites
+- macOS (Apple Silicon recommended)
+- Python 3.8+
+- 8GB RAM minimum
+
+### Setup and Run
+```bash
+# 1. Check if Ollama is installed and running
+if ! command -v ollama &> /dev/null; then
+    echo "Installing Ollama..."
+    brew install ollama
+fi
+
+# 2. Start Ollama service
+if ! pgrep -x "ollama" > /dev/null; then
+    echo "Starting Ollama..."
+    ollama serve > /dev/null 2>&1 &
+    sleep 3
+fi
+
+# 3. Download LLM model (first time only, ~2GB)
+if ! ollama list | grep -q "llama3.2:3b"; then
+    echo "Downloading model..."
+    ollama pull llama3.2:3b
+fi
+
+# 4. Setup Python environment
+python3 -m venv rag-venv
 source rag-venv/bin/activate
 
-# Install dependencies
+# 5. Install dependencies
 pip install -r requirements.txt
 
-# Start Jupyter
+# 6. Start Jupyter
 jupyter notebook
+```
 
