@@ -138,14 +138,41 @@ ask_question("What are pcai core tools?")
 
 
 ## Quick Start
-```bash
 
-python -m venv rag-venv
+### Prerequisites
+- macOS (Apple Silicon recommended)
+- Python 3.8+
+- 8GB RAM minimum
+
+### Setup and Run
+```bash
+# 1. Check if Ollama is installed and running
+if ! command -v ollama &> /dev/null; then
+    echo "Installing Ollama..."
+    brew install ollama
+fi
+
+# 2. Start Ollama service
+if ! pgrep -x "ollama" > /dev/null; then
+    echo "Starting Ollama..."
+    ollama serve > /dev/null 2>&1 &
+    sleep 3
+fi
+
+# 3. Download LLM model (first time only, ~2GB)
+if ! ollama list | grep -q "llama3.2:3b"; then
+    echo "Downloading model..."
+    ollama pull llama3.2:3b
+fi
+
+# 4. Setup Python environment
+python3 -m venv rag-venv
 source rag-venv/bin/activate
 
-# Install dependencies
+# 5. Install dependencies
 pip install -r requirements.txt
 
-# Start Jupyter
+# 6. Start Jupyter
 jupyter notebook
+```
 
