@@ -8,3 +8,4 @@ datasets==2.14.0
 numpy==1.26.4
 huggingface_hub==0.16.4
 nltk==3.9.1
+ollama
