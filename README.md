@@ -1,5 +1,7 @@
 # RAG Pipeline Project – HPE Private Cloud AI PDF
 
+![High Level Architechture of the RAG pipeline](images/local-rag-pcai.png)
+
 ## Overview
 This project implements a **minimal Retrieval-Augmented Generation (RAG) pipeline** using a PDF knowledge base. The pipeline answers user queries by retrieving relevant content from the document and synthesizing a response.
 
