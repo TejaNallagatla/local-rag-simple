@@ -1,4 +1,4 @@
-# RAG Pipeline Project – HPE Private Cloud AI PDF
+# RAG Pipeline Project – HPE Private Cloud AI SUPPORT DOCUMENTATION PDF
 
 ![High Level Architechture of the RAG pipeline](images/local-rag-pcai.png)
 
