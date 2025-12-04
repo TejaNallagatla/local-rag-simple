@@ -1,18 +1,7 @@
 from pathlib import Path
 from PyPDF2 import PdfReader
-import re
-
-def sent_tokenize(text):
-    """
-    Simple regex-based sentence tokenizer.
-    Splits text at '.', '!', '?' followed by a space or end of line.
-    """
-    # Remove multiple spaces/newlines
-    text = re.sub(r'\s+', ' ', text).strip()
-    # Split sentences using regex
-    sentences = re.split(r'(?<=[.!?])\s+', text)
-    # Remove empty strings
-    return [s for s in sentences if s]
+#import re
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 class KnowledgeBase:
     """
@@ -49,49 +38,30 @@ class KnowledgeBase:
         print(f"✅ Loaded {len(self.documents)} pages from PDF")
         return self.documents
 
-    def chunk_text(self, text: str):
-        """
-        Split text into sentence-preserving chunks with overlap
-        """
-        sentences = sent_tokenize(text)
-        chunks = []
-        current_chunk = []
-        current_length = 0
-
-        for sent in sentences:
-            words = sent.split()
-            sent_length = len(words)
-
-            # If adding this sentence exceeds chunk size, finalize current chunk
-            if current_length + sent_length > self.chunk_size and current_chunk:
-                chunks.append(" ".join(current_chunk))
-                # Keep overlap words
-                overlap_words = current_chunk[-self.chunk_overlap:] if self.chunk_overlap < len(current_chunk) else current_chunk
-                current_chunk = overlap_words.copy()
-                current_length = len(current_chunk)
-
-            # Add current sentence
-            current_chunk.extend(words)
-            current_length += sent_length
-
-        # Add remaining chunk
-        if current_chunk:
-            chunks.append(" ".join(current_chunk))
-
-        return chunks
-
     def create_chunks(self):
         """Convert all pages into sentence-preserving chunks"""
         if not self.documents:
             raise ValueError("No documents loaded. Call load_pdf_data() first.")
+        
+        print("\n Creating chunks with LangChain RecursiveCharacterTextSplitter...")
 
+        splitter = RecursiveCharacterTextSplitter(
+            chunk_size=self.chunk_size,
+            chunk_overlap=self.chunk_overlap,
+            separators=["\n\n", "\n", ".", "!", "?", " ", ""]
+        )
+        #Init storage for self.chunks
         self.chunks = []
-        for doc in self.documents:
-            page_chunks = self.chunk_text(doc['content'])
-            for c in page_chunks:
-                self.chunks.append({"page": doc['page'], "chunk": c})
+        # loop through each pdf page
+        for d in self.documents:
+            split = splitter.split_text(d["content"])
+            for chunk in split:
+                self.chunks.append({
+                    "page": d["page"],
+                    "chunk": chunk
+                })
 
-        print(f"✅ Created {len(self.chunks)} text chunks")
+        print(f"✅ Created {len(self.chunks)} chunks")
         return self.chunks
 
     def get_stats(self):
