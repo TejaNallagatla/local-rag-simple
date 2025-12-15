@@ -1,6 +1,7 @@
 """
 =============================================================================
-SIMPLE RAG TEST PIPELINE
+SIMPLE RAG TEST PIPELINE FOR KNOWLEDGE BASE
+This Airflow DAG runs a mini RAG preprocessing pipeline by checking the input PDF, generating a small set of text chunks, and printing a summary. It demonstrates how tasks pass data through XCom and how intermediate artifacts are saved for reuse. It’s a lightweight end-to-end test of the knowledge-base preparation workflow.
 =============================================================================
 This DAG has 3 tasks that run in sequence:
 1. Check if PDF exists
@@ -21,7 +22,6 @@ import os
 # ============================================================================
 # STEP 1: Configure Paths
 # ============================================================================
-# Add your project directory so Python can find your modules
 sys.path.append('/Users/nallagat/playground/at-2/pcai-at-2-rag')  
 
 # Import your RAG components
@@ -341,6 +341,7 @@ task3 = PythonOperator(
 
 task1 >> task2 >> task3
 
+# KNOWLEDGE PURPOSES ONLy
 # Could also write as:
 # task1.set_downstream(task2)
 # task2.set_downstream(task3)
