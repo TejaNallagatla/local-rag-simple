@@ -178,3 +178,55 @@ pip install -r requirements.txt
 jupyter notebook
 ```
 
+## 📊 When to Use What?
+
+**Jupyter Notebook**: Exploration, experimentation, learning - manually run when you want to test ideas or analyze results interactively.
+
+**Airflow DAG**: Production automation - runs on schedule (daily/weekly), handles failures with retries, sends alerts, and manages complex multi-step pipelines reliably without manual intervention.
+
+**Rule of thumb**: Use notebooks for "What if?", use DAGs for "Do this every day at 2am."
+
+
+## 🚀  With Apache Airflow
+#### 1. Initialize Airflow
+```bash
+# Set Airflow home (where configs/logs go)
+export AIRFLOW_HOME=~/airflow
+
+# Initialize database
+airflow db init
+
+# Create admin user
+airflow users create \
+    --username admin \
+    --firstname Admin \
+    --lastname User \
+    --role Admin \
+    --email admin@example.com \
+    --password admin
+```
+
+#### 2. Copy DAG File
+```bash
+# Copy DAG to Airflow's DAG folder
+cp airflow/pcai-rag-dag.py ~/airflow/dags/
+
+# Or create symlink (better for development)
+ln -s $(pwd)/airflow/pcai-rag-dag.py ~/airflow/dags/
+```
+
+#### 3. Start Airflow
+```bash
+# Terminal 1: Start scheduler
+airflow scheduler
+
+# Terminal 2: Start webserver
+airflow webserver --port 8080
+```
+### Running the DAG
+
+1. **Find DAG**: Look for `pcai-rag-dag` in the DAG list
+2. **Enable**: Toggle the switch to enable the DAG
+3. **Trigger**: Click the ▶️ play button to run manually
+4. **Monitor**: Click on the DAG to see task progress
+5. **View Logs**: Click on a task → Logs to see output
