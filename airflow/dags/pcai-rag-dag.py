@@ -1,6 +1,6 @@
 """
 =============================================================================
-SIMPLE RAG TEST PIPELINE - BEGINNER VERSION
+SIMPLE RAG TEST PIPELINE
 =============================================================================
 This DAG has 3 tasks that run in sequence:
 1. Check if PDF exists
