@@ -1,0 +1,92 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "local-rag-simple"
+version = "0.1.0"
+description = "A minimal Retrieval-Augmented Generation (RAG) pipeline using local PDFs and LLMs"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+
+authors = [
+    {name = "Teja Nallagatla", email = "tejaswini.15n@gmail.com"}
+]
+
+keywords = ["rag", "retrieval-augmented-generation", "llm", "local-rag", "pdf-rag", "embeddings", "faiss"]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "PyPDF2>=3.0.0",
+    "nltk>=3.8.0",
+    "sentence-transformers==2.2.2",
+    "faiss-cpu==1.12.0",
+    "datasets==2.14.0",
+    "numpy==1.26.4",
+    "huggingface-hub>=0.30.2,<1.0.0",
+    "ollama",
+    "langchain==0.3.7",
+    "langchain-huggingface==0.3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "flake8>=6.0",
+    "isort>=5.0",
+    "mypy>=1.0",
+]
+notebook = [
+    "jupyter==1.0.0",
+    "notebook==7.0.6",
+]
+airflow = [
+    "apache-airflow==3.1.4",
+]
+all = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "flake8>=6.0",
+    "isort>=5.0",
+    "mypy>=1.0",
+    "jupyter==1.0.0",
+    "notebook==7.0.6",
+    "apache-airflow==3.1.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/TejaNallagatla/local-rag-simple"
+Documentation = "https://github.com/TejaNallagatla/local-rag-simple#readme"
+Repository = "https://github.com/TejaNallagatla/local-rag-simple.git"
+"Bug Tracker" = "https://github.com/TejaNallagatla/local-rag-simple/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages]
+find = {where = ["src"]}
+
+[tool.black]
+line-length = 88
+target-version = ["py38", "py39", "py310", "py311", "py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=local_rag_simple"
